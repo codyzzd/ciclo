@@ -1,65 +1,153 @@
-import Image from "next/image";
+'use client'
+
+import { useState } from 'react'
+import { useCycleData } from '@/hooks/useCycleData'
+import { ProfileHeader } from '@/components/ProfileHeader'
+import { CalendarView } from '@/components/CalendarView'
+import { ProfileManager } from '@/components/ProfileManager'
+import { IntensityPicker } from '@/components/IntensityPicker'
+import { ModeToggle, type CalendarMode } from '@/components/ModeToggle'
 
 export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+  const {
+    mounted,
+    profiles,
+    currentProfile,
+    currentProfileId,
+    prediction,
+    markedDates,
+    switchProfile,
+    createProfile,
+    deleteProfile,
+    toggleMenstruou,
+    toggleSexo,
+    setIntensidade,
+    getDayData,
+  } = useCycleData()
+
+  const [showManager, setShowManager] = useState(false)
+  const [mode, setMode] = useState<CalendarMode>('period')
+  const [intensityDate, setIntensityDate] = useState<string | null>(null)
+
+  function handleDayPress(date: string) {
+    if (!currentProfileId) { setShowManager(true); return }
+    if (mode === 'period') toggleMenstruou(date)
+    else toggleSexo(date)
+  }
+
+  function handleLongPress(date: string) {
+    if (!currentProfileId) return
+    // Long press on period mode opens intensity for period days
+    if (mode === 'period' && getDayData(date)?.menstruou) {
+      setIntensityDate(date)
+    }
+  }
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-[#fdf6f7] flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full border-2 border-[#c2185b] border-t-transparent animate-spin" />
+      </div>
+    )
+  }
+
+  if (profiles.length === 0) {
+    return (
+      <div className="min-h-screen bg-[#fdf6f7] flex flex-col items-center justify-center px-8 gap-6">
+        <div className="text-6xl">🩷</div>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Bem-vinda ao Ciclo</h1>
+          <p className="text-gray-500 text-sm leading-relaxed">
+            Acompanhe seu ciclo menstrual de forma simples e inteligente
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <button
+          onClick={() => setShowManager(true)}
+          className="w-full max-w-xs bg-[#c2185b] text-white font-semibold py-4 rounded-2xl active:scale-95 transition-transform"
+        >
+          Criar perfil
+        </button>
+        <ProfileManager
+          open={showManager}
+          profiles={profiles}
+          currentProfileId={currentProfileId}
+          onSwitch={switchProfile}
+          onCreate={createProfile}
+          onDelete={deleteProfile}
+          onClose={() => setShowManager(false)}
+        />
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-[#fdf6f7]">
+      <div className="max-w-md mx-auto">
+
+        {/* Sticky top block: header + prediction banner */}
+        <div className="sticky top-0 z-20">
+          <ProfileHeader
+            profile={currentProfile}
+            onOpenManager={() => setShowManager(true)}
+          />
+
+          {prediction.nextPeriodStart && (
+            <div className="bg-white border-b border-[#f8bbd0]/60 px-4 py-3 flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-[11px] text-[#c2185b] font-semibold uppercase tracking-wide leading-none mb-0.5">
+                  Próximo período
+                </p>
+                <p className="text-xl font-bold text-gray-900 leading-tight">
+                  {prediction.nextPeriodStart.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}
+                </p>
+                {prediction.cyclesDetected === 1 && (
+                  <p className="text-[10px] text-gray-400 mt-0.5">estimativa · ciclo padrão de 28 dias</p>
+                )}
+              </div>
+              {prediction.ovulationDate && (
+                <div className="text-right flex-shrink-0">
+                  <p className="text-[11px] text-[#00897b] font-semibold uppercase tracking-wide leading-none mb-0.5">
+                    Ovulação
+                  </p>
+                  <p className="text-base font-bold text-gray-700 leading-tight">
+                    {prediction.ovulationDate.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' })}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
-      </main>
+
+        <main className="pb-32">
+          <CalendarView
+            mode={mode}
+            prediction={prediction}
+            markedDates={markedDates}
+            getDayData={getDayData}
+            onDayPress={handleDayPress}
+            onLongPress={handleLongPress}
+          />
+        </main>
+
+        <ModeToggle mode={mode} onChange={setMode} />
+
+        <ProfileManager
+          open={showManager}
+          profiles={profiles}
+          currentProfileId={currentProfileId}
+          onSwitch={switchProfile}
+          onCreate={createProfile}
+          onDelete={deleteProfile}
+          onClose={() => setShowManager(false)}
+        />
+        <IntensityPicker
+          open={intensityDate !== null}
+          date={intensityDate}
+          current={intensityDate ? getDayData(intensityDate)?.intensidade ?? null : null}
+          onSelect={(i) => { if (intensityDate) setIntensidade(intensityDate, i); setIntensityDate(null) }}
+          onClose={() => setIntensityDate(null)}
+        />
+      </div>
     </div>
-  );
+  )
 }
