@@ -45,7 +45,7 @@ export function CalendarTab({
   }
 
   return (
-    <div className="pb-28 anim-1">
+    <div className="pb-6 anim-1">
       <CalendarView
         mode={mode}
         prediction={prediction}

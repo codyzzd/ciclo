@@ -2,6 +2,7 @@
 
 import type { CyclePrediction } from '@/types'
 import { getPregnancyProbability } from '@/lib/insights-logic'
+import { CountdownOrb } from '@/components/CountdownOrb'
 
 interface Props {
   prediction: CyclePrediction
@@ -28,34 +29,6 @@ export function HomeTab({ prediction, markedDates }: Props) {
 
   const daysUntil = prediction.daysUntilNextPeriod
   const avgCycle = prediction.averageCycleLength ?? 28
-
-  // --- Countdown ring ---
-  const isLate = daysUntil !== null && daysUntil < 0
-  const countLabel = daysUntil === null
-    ? '—'
-    : daysUntil === 0
-    ? 'Hoje'
-    : isLate
-    ? `${Math.abs(daysUntil)}d atraso`
-    : `${daysUntil}`
-
-  const countSublabel = daysUntil === null
-    ? 'Registre seus ciclos'
-    : daysUntil === 0
-    ? 'Período esperado hoje'
-    : isLate
-    ? 'Período esperado já passou'
-    : 'dias para o período'
-
-  // Progress 0–1 through cycle (days since last period / avg cycle)
-  const progress = daysUntil !== null
-    ? Math.max(0, Math.min(1, (avgCycle - daysUntil) / avgCycle))
-    : 0
-
-  const radius = 72
-  const circumference = 2 * Math.PI * radius
-  const strokeDash = circumference * progress
-  const strokeGap = circumference - strokeDash
 
   // --- Strip: 7 days before + today + 7 days after = 15 ---
   const markedSet = new Set(markedDates)
@@ -91,31 +64,9 @@ export function HomeTab({ prediction, markedDates }: Props) {
 
   return (
     <div className="flex flex-col bg-white pb-6">
-      {/* Countdown circle */}
-      <div className="flex flex-col items-center pt-6 pb-6 anim-1">
-        <div className="relative w-48 h-48">
-          <svg className="w-full h-full -rotate-90" viewBox="0 0 160 160">
-            {/* Track */}
-            <circle cx="80" cy="80" r={radius} fill="none" stroke="#F0F0F0" strokeWidth="10" />
-            {/* Progress */}
-            <circle
-              cx="80" cy="80" r={radius}
-              fill="none"
-              stroke="#FF385C"
-              strokeWidth="10"
-              strokeLinecap="round"
-              strokeDasharray={`${strokeDash} ${strokeGap}`}
-            />
-          </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className={`font-bold leading-none ${daysUntil !== null && Math.abs(daysUntil) >= 10 ? 'text-4xl' : 'text-5xl'}`}>
-              {countLabel}
-            </span>
-            <span className="text-xs text-gray-600 text-center mt-1.5 px-4 leading-tight">
-              {countSublabel}
-            </span>
-          </div>
-        </div>
+      {/* Countdown orb */}
+      <div className="flex justify-center pt-4 pb-2 anim-1">
+        <CountdownOrb daysUntil={daysUntil} avgCycle={avgCycle} />
       </div>
 
       {/* Strip */}
@@ -167,7 +118,7 @@ export function HomeTab({ prediction, markedDates }: Props) {
 
       {/* Next period info */}
       {prediction.nextPeriodStart && (
-        <div className="mx-4 mt-3">
+        <div className="mx-4 mt-3 anim-3">
           <div className="rounded-2xl px-4 py-4 bg-[#FFF5F7]">
             <div className="flex items-center justify-between">
               <div>

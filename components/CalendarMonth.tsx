@@ -148,7 +148,7 @@ export function CalendarMonth({ year, month, mode, prediction, markedDates, getD
                   transition-all duration-150 select-none
                   ${isFuture ? 'cursor-default' : 'active:scale-90'}
                   ${cellClass}
-                  ${isToday && !cellClass ? 'ring-2 ring-[#FF385C]/40' : ''}
+                  ${isToday ? 'ring-2 ring-gray-900 ring-offset-1' : ''}
                   ${isOtherMonth && mode !== 'sex' ? 'opacity-25' : ''}
                   ${isFuture && !isOtherMonth ? 'opacity-35' : ''}
                 `}

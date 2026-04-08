@@ -107,9 +107,11 @@ export function HomeClient() {
         )}
       </div>
 
-      {/* ModeToggle fora de qualquer container animado — só aparece no calendário */}
+      {/* ModeToggle — grudado acima do navbar, só no calendário */}
       {tab === 'calendar' && (
-        <ModeToggle mode={calendarMode} onChange={setCalendarMode} />
+        <div className="flex-shrink-0">
+          <ModeToggle mode={calendarMode} onChange={setCalendarMode} />
+        </div>
       )}
 
       {/* Navbar — nunca scrollar */}
