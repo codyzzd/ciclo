@@ -2,6 +2,10 @@
 
 import { useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faDroplet, faHeart, faSeedling } from '@fortawesome/free-solid-svg-icons'
+import { faCircle as faCircleOutline } from '@fortawesome/free-regular-svg-icons'
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import { CalendarMonth } from './CalendarMonth'
 import type { CyclePrediction, CycleDay } from '@/types'
 import type { CalendarMode } from './ModeToggle'
@@ -75,10 +79,19 @@ export function CalendarView({ mode, prediction, markedDates, getDayData, onDayP
 
       {/* Legend */}
       <div className="flex items-center justify-center gap-4 px-4 py-4 flex-wrap">
-        <LegendItem color="bg-[#FF385C]" label="Período" />
-        <LegendItem color="bg-[#FFF0F2] border border-[#FFB3C0]" label="Previsão" />
-        <LegendItem color="bg-[#E6F7F6] border border-[#00A699]" label="Fértil" icon="♡" iconColor="text-[#007A73]" />
-        <LegendItem color="bg-[#00A699] border border-[#007A73]" label="Ovulação" icon="○" iconColor="text-white" />
+        {mode === 'sex' ? (
+          <>
+            <LegendItem color="bg-[#7C3AED]" label="Relação" icon={faHeart} iconColor="text-white" />
+            <LegendItem color="bg-[#FF385C]" label="Período" icon={faDroplet} iconColor="text-white" />
+          </>
+        ) : (
+          <>
+            <LegendItem color="bg-[#FF385C]" label="Período" icon={faDroplet} iconColor="text-white" />
+            <LegendItem color="bg-[#FFF0F2] border border-[#FFB3C0]" label="Previsão" icon={faDroplet} iconColor="text-[#FF385C]" />
+            <LegendItem color="bg-[#E6F7F6] border border-[#00A699]" label="Fértil" icon={faSeedling} iconColor="text-[#00A699]" />
+            <LegendItem color="bg-[#00A699] ring-2 ring-[#007A73]" label="Ovulação" icon={faCircleOutline} iconColor="text-white" />
+          </>
+        )}
       </div>
 
       {prediction.cyclesDetected === 0 && (
@@ -98,11 +111,11 @@ export function CalendarView({ mode, prediction, markedDates, getDayData, onDayP
   )
 }
 
-function LegendItem({ color, label, icon, iconColor }: { color: string; label: string; icon?: string; iconColor?: string }) {
+function LegendItem({ color, label, icon, iconColor }: { color: string; label: string; icon?: IconDefinition; iconColor?: string }) {
   return (
     <div className="flex items-center gap-1.5">
-      <div className={`w-5 h-5 rounded-full ${color} flex items-center justify-center`}>
-        {icon && <span className={`text-[9px] ${iconColor ?? 'text-[#007A73]'}`}>{icon}</span>}
+      <div className={`w-6 h-6 rounded-full ${color} flex items-center justify-center`}>
+        {icon && <FontAwesomeIcon icon={icon} className={`w-1.5 h-1.5 ${iconColor ?? ''}`} />}
       </div>
       <span className="text-xs text-[#717171]">{label}</span>
     </div>
