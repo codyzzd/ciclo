@@ -90,15 +90,16 @@ export function CalendarMonth({ year, month, mode, prediction, markedDates, getD
           let cellClass = ''
           let numberClass = ''
 
-          if (isPeriod) {
+          if (mode === 'sex' && hasSexo) {
+            // No modo relação, dias com sexo são sempre roxos
+            cellClass = 'bg-[#7C3AED] ring-2 ring-[#7C3AED]/40'
+            numberClass = 'text-white font-bold'
+          } else if (isPeriod) {
             const intensity = dayData?.intensidade
             if (intensity === 'leve')        cellClass = 'bg-[#FF7699]'
             else if (intensity === 'intenso') cellClass = 'bg-[#C2185B]'
             else                              cellClass = 'bg-[#FF385C]'
             numberClass = 'text-white font-bold'
-          } else if (mode === 'sex' && hasSexo) {
-            cellClass = 'bg-[#F5F3FF] ring-2 ring-[#7C3AED]/30'
-            numberClass = 'text-[#7C3AED] font-bold'
           } else if (isPredicted && (isCurrentMonth || mode === 'sex')) {
             cellClass = 'bg-[#FFF0F2]'
             numberClass = 'text-[#FF385C] font-semibold'
@@ -158,20 +159,28 @@ export function CalendarMonth({ year, month, mode, prediction, markedDates, getD
 
                 {/* Primary icon row */}
                 <span className="mt-0.5 flex items-center gap-0.5">
-                  {isPeriod && (
-                    <FontAwesomeIcon icon={faDroplet} className="w-2.5 h-2.5 text-white" />
-                  )}
-                  {!isPeriod && isPredicted && isCurrentMonth && (
-                    <FontAwesomeIcon icon={faDroplet} className="w-2.5 h-2.5 text-[#FF385C]" />
-                  )}
-                  {!isPeriod && !isPredicted && isFertile && isCurrentMonth && (
-                    <FontAwesomeIcon icon={faSeedling} className="w-2.5 h-2.5 text-[#00A699]" />
-                  )}
-                  {!isPeriod && !isPredicted && isOvulation && isCurrentMonth && (
-                    <FontAwesomeIcon icon={faCircleOutline} className="w-2.5 h-2.5 text-white" />
-                  )}
-                  {mode === 'sex' && hasSexo && (
-                    <FontAwesomeIcon icon={faHeart} className={`w-2.5 h-2.5 ${isPeriod ? 'text-white/80' : 'text-[#7C3AED]'}`} />
+                  {mode === 'sex' && hasSexo ? (
+                    <>
+                      <FontAwesomeIcon icon={faHeart} className="w-2.5 h-2.5 text-white" />
+                      {isPeriod && (
+                        <FontAwesomeIcon icon={faDroplet} className="w-2 h-2 text-white/60" />
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {isPeriod && (
+                        <FontAwesomeIcon icon={faDroplet} className="w-2.5 h-2.5 text-white" />
+                      )}
+                      {!isPeriod && isPredicted && isCurrentMonth && (
+                        <FontAwesomeIcon icon={faDroplet} className="w-2.5 h-2.5 text-[#FF385C]" />
+                      )}
+                      {!isPeriod && !isPredicted && isFertile && isCurrentMonth && (
+                        <FontAwesomeIcon icon={faSeedling} className="w-2.5 h-2.5 text-[#00A699]" />
+                      )}
+                      {!isPeriod && !isPredicted && isOvulation && isCurrentMonth && (
+                        <FontAwesomeIcon icon={faCircleOutline} className="w-2.5 h-2.5 text-white" />
+                      )}
+                    </>
                   )}
                 </span>
 

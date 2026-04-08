@@ -13,14 +13,28 @@ export function useCycleData() {
   const [allDays, setAllDays] = useState<CycleDay[]>([])
   const [mounted, setMounted] = useState(false)
 
-  // Ref para ler allDays de forma síncrona sem causar re-renders
-  const allDaysRef = useRef(allDays)
-  useEffect(() => { allDaysRef.current = allDays }, [allDays])
+  // Instância estável — não recriada a cada render
+  const supabase = useRef(createClient()).current
 
-  const currentProfileIdRef = useRef(currentProfileId)
-  useEffect(() => { currentProfileIdRef.current = currentProfileId }, [currentProfileId])
+  // Refs para leitura síncrona sem triggering re-renders
+  const profilesRef = useRef<Profile[]>([])
+  const allDaysRef = useRef<CycleDay[]>([])
+  const currentProfileIdRef = useRef<string | null>(null)
 
-  const supabase = createClient()
+  function syncProfiles(ps: Profile[]) {
+    profilesRef.current = ps
+    setProfiles(ps)
+  }
+  function syncDays(ds: CycleDay[]) {
+    allDaysRef.current = ds
+    setAllDays(ds)
+  }
+  function syncCurrentId(id: string | null) {
+    currentProfileIdRef.current = id
+    setCurrentProfileId(id)
+    if (id) localStorage.setItem(CURRENT_PROFILE_KEY, id)
+    else localStorage.removeItem(CURRENT_PROFILE_KEY)
+  }
 
   // ── Carregamento inicial ────────────────────────────────────
   useEffect(() => {
@@ -28,10 +42,13 @@ export function useCycleData() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { setMounted(true); return }
 
-      const [{ data: ps }, { data: ds }] = await Promise.all([
+      const [{ data: ps, error: psErr }, { data: ds, error: dsErr }] = await Promise.all([
         supabase.from('profiles').select('id, nome, created_at').order('created_at'),
         supabase.from('cycle_days').select('id, profile_id, date, menstruou, intensidade, sexo'),
       ])
+
+      if (psErr) console.error('Erro ao carregar perfis:', psErr)
+      if (dsErr) console.error('Erro ao carregar dias:', dsErr)
 
       const loadedProfiles: Profile[] = ps ?? []
       const loadedDays: CycleDay[] = (ds ?? []).map(d => ({
@@ -41,16 +58,14 @@ export function useCycleData() {
         sexo: d.sexo ?? false,
       }))
 
-      setProfiles(loadedProfiles)
-      setAllDays(loadedDays)
-      allDaysRef.current = loadedDays
+      syncProfiles(loadedProfiles)
+      syncDays(loadedDays)
 
       const saved = localStorage.getItem(CURRENT_PROFILE_KEY)
       const nextId = (saved && loadedProfiles.find(p => p.id === saved))
         ? saved
         : loadedProfiles[0]?.id ?? null
-      setCurrentProfileId(nextId)
-      currentProfileIdRef.current = nextId
+      syncCurrentId(nextId)
 
       setMounted(true)
     }
@@ -64,79 +79,125 @@ export function useCycleData() {
 
   // ── Navegação de perfil ─────────────────────────────────────
   const switchProfile = useCallback((id: string) => {
-    setCurrentProfileId(id)
-    currentProfileIdRef.current = id
-    localStorage.setItem(CURRENT_PROFILE_KEY, id)
-  }, [])
+    syncCurrentId(id)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ── Criar perfil ────────────────────────────────────────────
+  // ── Criar perfil (otimístico) ───────────────────────────────
   const createProfile = useCallback((nome: string) => {
     async function run() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
 
+      const tempId = crypto.randomUUID()
+      const tempProfile: Profile = { id: tempId, nome, created_at: new Date().toISOString() }
+
+      syncProfiles([...profilesRef.current, tempProfile])
+      syncCurrentId(tempId)
+
       const { data, error } = await supabase
         .from('profiles')
-        .insert({ nome, user_id: user.id })
+        .insert({ id: tempId, nome, user_id: user.id })
         .select('id, nome, created_at')
         .single()
 
-      if (error || !data) return
+      if (error) {
+        console.error('Erro ao criar perfil:', error)
+        syncProfiles(profilesRef.current.filter(p => p.id !== tempId))
+        syncCurrentId(profilesRef.current[0]?.id ?? null)
+        return
+      }
 
-      const newProfile: Profile = data
-      setProfiles(prev => [...prev, newProfile])
-      setCurrentProfileId(newProfile.id)
-      currentProfileIdRef.current = newProfile.id
-      localStorage.setItem(CURRENT_PROFILE_KEY, newProfile.id)
+      if (data) {
+        syncProfiles(profilesRef.current.map(p => p.id === tempId ? data : p))
+      }
     }
     void run()
-    return { id: '', nome, created_at: new Date().toISOString() } as Profile
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Renomear perfil ─────────────────────────────────────────
+  const renameProfile = useCallback((id: string, nome: string) => {
+    const snapshot = profilesRef.current
+    syncProfiles(snapshot.map(p => p.id === id ? { ...p, nome } : p))
+
+    supabase.from('profiles').update({ nome }).eq('id', id).then(({ error }) => {
+      if (error) {
+        console.error('Erro ao renomear perfil:', error)
+        syncProfiles(snapshot)
+      }
+    })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Deletar perfil ──────────────────────────────────────────
   const deleteProfile = useCallback((id: string) => {
-    const updatedProfiles = profiles.filter(p => p.id !== id)
-    const updatedDays = allDaysRef.current.filter(d => d.profile_id !== id)
+    const snapshotProfiles = profilesRef.current
+    const snapshotDays = allDaysRef.current
+    const updatedProfiles = snapshotProfiles.filter(p => p.id !== id)
 
-    setProfiles(updatedProfiles)
-    setAllDays(updatedDays)
-    allDaysRef.current = updatedDays
+    syncProfiles(updatedProfiles)
+    syncDays(snapshotDays.filter(d => d.profile_id !== id))
 
     if (currentProfileIdRef.current === id) {
-      const next = updatedProfiles[0]?.id ?? null
-      setCurrentProfileId(next)
-      currentProfileIdRef.current = next
-      if (next) localStorage.setItem(CURRENT_PROFILE_KEY, next)
-      else localStorage.removeItem(CURRENT_PROFILE_KEY)
+      syncCurrentId(updatedProfiles[0]?.id ?? null)
     }
 
-    void supabase.from('profiles').delete().eq('id', id)
-  }, [profiles]) // eslint-disable-line react-hooks/exhaustive-deps
+    supabase.from('profiles').delete().eq('id', id).then(({ error }) => {
+      if (error) {
+        console.error('Erro ao deletar perfil:', error)
+        syncProfiles(snapshotProfiles)
+        syncDays(snapshotDays)
+        if (currentProfileIdRef.current !== id) syncCurrentId(id)
+      }
+    })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ── Upsert day (interno) ────────────────────────────────────
+  // ── Upsert day ──────────────────────────────────────────────
   const upsertDay = useCallback((date: string, patch: Partial<CycleDay>) => {
     const profileId = currentProfileIdRef.current
     if (!profileId) return
 
     const days = allDaysRef.current
     const existing = days.find(d => d.profile_id === profileId && d.date === date)
+    const snapshotDays = days
 
-    let updated: CycleDay[]
+    async function persist(nextDays: CycleDay[]) {
+      syncDays(nextDays)
+
+      let error: unknown = null
+
+      if (existing) {
+        const merged = { ...existing, ...patch }
+        if (!merged.menstruou && !merged.sexo) {
+          const res = await supabase.from('cycle_days').delete()
+            .eq('profile_id', profileId).eq('date', date)
+          error = res.error
+        } else {
+          const res = await supabase.from('cycle_days').upsert(
+            { profile_id: profileId, date, menstruou: merged.menstruou, intensidade: merged.intensidade ?? null, sexo: merged.sexo },
+            { onConflict: 'profile_id,date' }
+          )
+          error = res.error
+        }
+      } else {
+        const newDay = { ...{ menstruou: false, intensidade: null, sexo: false }, ...patch }
+        const res = await supabase.from('cycle_days').upsert(
+          { profile_id: profileId, date, menstruou: newDay.menstruou, intensidade: newDay.intensidade ?? null, sexo: newDay.sexo },
+          { onConflict: 'profile_id,date' }
+        )
+        error = res.error
+      }
+
+      if (error) {
+        console.error('Erro ao salvar dia:', error)
+        syncDays(snapshotDays)
+      }
+    }
 
     if (existing) {
       const merged: CycleDay = { ...existing, ...patch }
       if (!merged.menstruou && !merged.sexo) {
-        updated = days.filter(d => !(d.profile_id === profileId && d.date === date))
-        void supabase.from('cycle_days').delete()
-          .eq('profile_id', profileId).eq('date', date)
+        void persist(days.filter(d => !(d.profile_id === profileId && d.date === date)))
       } else {
-        updated = days.map(d =>
-          d.profile_id === profileId && d.date === date ? merged : d
-        )
-        void supabase.from('cycle_days').upsert(
-          { profile_id: profileId, date, menstruou: merged.menstruou, intensidade: merged.intensidade ?? null, sexo: merged.sexo },
-          { onConflict: 'profile_id,date' }
-        )
+        void persist(days.map(d => d.profile_id === profileId && d.date === date ? merged : d))
       }
     } else {
       const newDay: CycleDay = {
@@ -148,19 +209,9 @@ export function useCycleData() {
         sexo: false,
         ...patch,
       }
-      if (newDay.menstruou || newDay.sexo) {
-        updated = [...days, newDay]
-        void supabase.from('cycle_days').upsert(
-          { profile_id: profileId, date, menstruou: newDay.menstruou, intensidade: newDay.intensidade ?? null, sexo: newDay.sexo },
-          { onConflict: 'profile_id,date' }
-        )
-      } else {
-        updated = days
-      }
+      if (!newDay.menstruou && !newDay.sexo) return
+      void persist([...days, newDay])
     }
-
-    setAllDays(updated)
-    allDaysRef.current = updated
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Toggle menstruou ────────────────────────────────────────
@@ -199,6 +250,7 @@ export function useCycleData() {
     markedDates,
     switchProfile,
     createProfile,
+    renameProfile,
     deleteProfile,
     toggleDay: toggleMenstruou,
     toggleMenstruou,

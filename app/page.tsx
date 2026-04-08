@@ -18,6 +18,7 @@ export default function Home() {
     markedDates,
     switchProfile,
     createProfile,
+    renameProfile,
     deleteProfile,
     toggleMenstruou,
     toggleSexo,
@@ -73,6 +74,7 @@ export default function Home() {
           currentProfileId={currentProfileId}
           onSwitch={switchProfile}
           onCreate={createProfile}
+          onRename={renameProfile}
           onDelete={deleteProfile}
           onClose={() => setShowManager(false)}
         />
@@ -101,7 +103,7 @@ export default function Home() {
                   {prediction.nextPeriodStart.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}
                 </p>
                 {prediction.cyclesDetected === 1 && (
-                  <p className="text-[10px] text-gray-400 mt-0.5">estimativa · ciclo padrão de 28 dias</p>
+                  <p className="text-xs text-[#717171] mt-0.5">Ciclo estimado de {prediction.averageCycleLength ?? 28} dias</p>
                 )}
               </div>
               {prediction.ovulationDate && (
@@ -137,6 +139,7 @@ export default function Home() {
           currentProfileId={currentProfileId}
           onSwitch={switchProfile}
           onCreate={createProfile}
+          onRename={renameProfile}
           onDelete={deleteProfile}
           onClose={() => setShowManager(false)}
         />
