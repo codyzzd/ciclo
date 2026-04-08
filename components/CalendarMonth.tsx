@@ -135,7 +135,7 @@ export function CalendarMonth({ year, month, mode, prediction, markedDates, getD
           }
 
           return (
-            <div key={dateStr} className="flex justify-center py-0.5">
+            <div key={dateStr} className="flex justify-center py-1">
               <button
                 onMouseDown={onPressStart}
                 onMouseUp={onPressEnd}
@@ -158,7 +158,7 @@ export function CalendarMonth({ year, month, mode, prediction, markedDates, getD
                 </span>
 
                 {/* Primary icon row */}
-                <span className="mt-0.5 flex items-center gap-0.5">
+                <span className="mt-1 flex items-center gap-1">
                   {mode === 'sex' && hasSexo ? (
                     <>
                       <FontAwesomeIcon icon={faHeart} className="w-2.5 h-2.5 text-white" />

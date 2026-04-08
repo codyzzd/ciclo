@@ -55,7 +55,7 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${nunito.variable} h-full antialiased`}
     >
-      <body className={`${nunito.className} min-h-full flex flex-col`}>{children}</body>
+      <body className={`${nunito.className} min-h-full flex flex-col bg-white`}>{children}</body>
     </html>
   );
 }

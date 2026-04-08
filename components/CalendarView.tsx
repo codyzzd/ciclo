@@ -113,7 +113,7 @@ export function CalendarView({ mode, prediction, markedDates, getDayData, onDayP
 
 function LegendItem({ color, label, icon, iconColor }: { color: string; label: string; icon?: IconDefinition; iconColor?: string }) {
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex items-center gap-2">
       <div className={`w-6 h-6 rounded-full ${color} flex items-center justify-center`}>
         {icon && <FontAwesomeIcon icon={icon} className={`w-1.5 h-1.5 ${iconColor ?? ''}`} />}
       </div>

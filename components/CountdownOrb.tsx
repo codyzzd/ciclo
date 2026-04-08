@@ -7,17 +7,19 @@ interface Props {
   avgCycle: number
 }
 
-const SIZE = 320
-const CX = SIZE / 2
-const CY = SIZE / 2
+// ViewBox panorâmico: ocupa largura toda do app, altura reduzida
+const W = 390
+const H = 300
+const CX = W / 2   // 195
+const CY = H / 2   // 150
 const CIRCLE_R = 88
 const STEP = 30
-const RANGE = 4
-const MIN_DIST = CIRCLE_R + 10
-const MAX_DIST = 186
+const RANGE_X = 6   // horizontal: ±180px → chega nas bordas de 390px
+const RANGE_Y = 4   // vertical: ±120px → cabe em 300px de altura
+const MIN_DIST = CIRCLE_R + 10  // 98
+const MAX_DIST = 205            // estendido para incluir pontos horizontais mais distantes
 
 export function CountdownOrb({ daysUntil, avgCycle }: Props) {
-  // 0 = início do ciclo, 1 = período hoje
   const progress = daysUntil !== null
     ? Math.max(0, Math.min(1, (avgCycle - Math.max(0, daysUntil)) / avgCycle))
     : 0
@@ -30,8 +32,8 @@ export function CountdownOrb({ daysUntil, avgCycle }: Props) {
       r: number; amplitude: number; duration: number; delay: number
     }[] = []
 
-    for (let i = -RANGE; i <= RANGE; i++) {
-      for (let j = -RANGE; j <= RANGE; j++) {
+    for (let i = -RANGE_X; i <= RANGE_X; i++) {
+      for (let j = -RANGE_Y; j <= RANGE_Y; j++) {
         const x = CX + i * STEP
         const y = CY + j * STEP
         const dx = x - CX
@@ -53,7 +55,6 @@ export function CountdownOrb({ daysUntil, avgCycle }: Props) {
     return result
   }, [])
 
-  // Interpolação: cinza (#E5E7EB) → vermelho (#FF385C)
   function dotColor(closeness: number): string {
     const t = Math.min(1, Math.max(0, progress * (closeness * 2 + 0.05)))
     const r = Math.round(229 + (255 - 229) * t)
@@ -68,7 +69,6 @@ export function CountdownOrb({ daysUntil, avgCycle }: Props) {
     : daysUntil === 0  ? 'Hoje'
     : String(Math.abs(daysUntil))
 
-  // Duas linhas para caber dentro do círculo sem overflow
   const sublabelLines: [string, string?] =
     daysUntil === null ? ['REGISTRE', 'SEUS CICLOS']
     : daysUntil === 0  ? ['PERÍODO', 'ESPERADO HOJE']
@@ -83,10 +83,8 @@ export function CountdownOrb({ daysUntil, avgCycle }: Props) {
 
   return (
     <svg
-      width={SIZE}
-      height={SIZE}
-      viewBox={`0 0 ${SIZE} ${SIZE}`}
-      style={{ overflow: 'visible' }}
+      viewBox={`0 0 ${W} ${H}`}
+      style={{ width: '100%', display: 'block' }}
     >
       <defs>
         <radialGradient id="orbGrad" cx="50%" cy="50%" r="50%">
@@ -96,7 +94,6 @@ export function CountdownOrb({ daysUntil, avgCycle }: Props) {
         </radialGradient>
       </defs>
 
-      {/* Pontos animados */}
       {dots.map(({ x, y, ndx, ndy, closeness, r, amplitude, duration, delay }, idx) => (
         <circle key={idx} cx={x} cy={y} r={r} fill={dotColor(closeness)}>
           <animateTransform
@@ -112,11 +109,9 @@ export function CountdownOrb({ daysUntil, avgCycle }: Props) {
         </circle>
       ))}
 
-      {/* Círculo central */}
       <circle cx={CX} cy={CY} r={CIRCLE_R} fill="url(#orbGrad)" />
       <circle cx={CX} cy={CY} r={CIRCLE_R} fill="none" stroke="#FFB3C0" strokeWidth="1.5" />
 
-      {/* Número */}
       <text
         x={CX} y={numY}
         textAnchor="middle"
@@ -129,7 +124,6 @@ export function CountdownOrb({ daysUntil, avgCycle }: Props) {
         {countLabel}
       </text>
 
-      {/* Label (duas linhas) */}
       <text
         x={CX} y={labelY}
         textAnchor="middle"

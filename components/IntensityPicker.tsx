@@ -31,7 +31,7 @@ export function IntensityPicker({ open, date, current, onSelect, onClose }: Prop
             <button
               key={opt.value}
               onClick={() => { onSelect(opt.value); onClose() }}
-              className={`flex items-center justify-between px-5 py-4 rounded-2xl border-2 transition-all ${
+              className={`flex items-center justify-between px-4 py-4 rounded-2xl border-2 transition-all ${
                 current === opt.value
                   ? 'border-[#FF385C] bg-[#FFF0F2]'
                   : 'border-transparent bg-[#F7F7F7] hover:bg-[#F7F7F7]'

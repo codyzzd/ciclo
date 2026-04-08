@@ -52,7 +52,7 @@ export function BottomNav({ active, onChange }: Props) {
             }`}
           >
             {tab.icon}
-            <span className="text-[10px] font-medium leading-none">{tab.label}</span>
+            <span className="text-[11px] font-medium leading-none">{tab.label}</span>
           </button>
         ))}
       </div>

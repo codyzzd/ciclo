@@ -122,7 +122,7 @@ export function LoginClient() {
               required
               autoComplete="email"
               placeholder="seu@email.com"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-300 outline-none focus:border-[#FF385C] focus:ring-1 focus:ring-[#FF385C] transition-colors"
+              className="w-full border border-gray-200 rounded-xl px-4 py-4 text-base text-gray-900 placeholder-gray-400 outline-none focus:border-[#FF385C] focus:ring-1 focus:ring-[#FF385C] transition-colors"
             />
           </div>
 

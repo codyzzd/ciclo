@@ -48,7 +48,7 @@ export function InsightsTab({ markedDates, profileName }: Props) {
   return (
     <div className="flex flex-col bg-white pb-6">
       {/* Header */}
-      <div className="px-5 pt-6 pb-4">
+      <div className="px-4 pt-6 pb-4">
         <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">
           {profileName ?? 'Perfil'}
         </p>
@@ -100,7 +100,7 @@ export function InsightsTab({ markedDates, profileName }: Props) {
               style={{ width: `${confidence}%` }}
             />
           </div>
-          <p className="text-[10px] text-gray-500 mt-1.5">
+          <p className="text-[10px] text-gray-500 mt-2">
             Baseado em {cycleLengths.length} {cycleLengths.length === 1 ? 'ciclo' : 'ciclos'} registrados
           </p>
         </div>

@@ -70,11 +70,11 @@ export function HomeTab({ prediction, markedDates }: Props) {
       </div>
 
       {/* Strip */}
-      <div className="px-4 mb-5 anim-2">
+      <div className="px-4 mb-6 anim-2">
         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Próximos 15 dias</p>
         <div className="flex items-end">
           {stripDays.map(({ dateStr, isToday, phase }) => (
-            <div key={dateStr} className="flex-1 flex flex-col items-center gap-1.5">
+            <div key={dateStr} className="flex-1 flex flex-col items-center gap-2">
               <span className="text-[8px] text-gray-500 font-semibold">{weekDayShort(dateStr)}</span>
               <div className={`rounded-full ${
                 isToday
@@ -93,7 +93,7 @@ export function HomeTab({ prediction, markedDates }: Props) {
             { color: 'bg-[#6EE7E2]', label: 'Fértil' },
             { color: 'bg-[#00A699]', label: 'Ovulação' },
           ].map(({ color, label }) => (
-            <div key={label} className="flex items-center gap-1.5">
+            <div key={label} className="flex items-center gap-2">
               <div className={`w-2.5 h-2.5 rounded-full ${color}`} />
               <span className="text-xs text-gray-600 font-medium">{label}</span>
             </div>
@@ -118,11 +118,11 @@ export function HomeTab({ prediction, markedDates }: Props) {
 
       {/* Next period info */}
       {prediction.nextPeriodStart && (
-        <div className="mx-4 mt-3 anim-3">
+        <div className="mx-4 mt-4 anim-3">
           <div className="rounded-2xl px-4 py-4 bg-[#FFF5F7]">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-semibold text-[#FF385C] uppercase tracking-wide mb-0.5">
+                <p className="text-xs font-semibold text-[#FF385C] uppercase tracking-wide mb-1">
                   Próximo período
                 </p>
                 <p className="text-lg font-bold text-gray-900">
@@ -131,7 +131,7 @@ export function HomeTab({ prediction, markedDates }: Props) {
               </div>
               {prediction.ovulationDate && (
                 <div className="text-right">
-                  <p className="text-xs font-semibold text-[#00A699] uppercase tracking-wide mb-0.5">
+                  <p className="text-xs font-semibold text-[#00A699] uppercase tracking-wide mb-1">
                     Ovulação
                   </p>
                   <p className="text-base font-bold text-gray-700">

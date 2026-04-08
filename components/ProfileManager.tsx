@@ -70,7 +70,7 @@ export function ProfileManager({ open, profiles, currentProfileId, onSwitch, onC
                       if (e.key === 'Enter') confirmEdit(p.id)
                       if (e.key === 'Escape') setEditingId(null)
                     }}
-                    className="flex-1 px-4 py-3 rounded-2xl border-2 border-[#FF385C] outline-none text-sm bg-white"
+                    className="flex-1 px-4 py-4 rounded-2xl border-2 border-[#FF385C] outline-none text-base bg-white"
                   />
                   <Button
                     onClick={() => confirmEdit(p.id)}
@@ -146,7 +146,7 @@ export function ProfileManager({ open, profiles, currentProfileId, onSwitch, onC
                 onChange={e => setNome(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleCreate()}
                 placeholder="Nome do perfil"
-                className="flex-1 px-4 py-3 rounded-2xl border-2 border-[#EBEBEB] outline-none focus:border-[#FF385C] text-sm bg-white"
+                className="flex-1 px-4 py-4 rounded-2xl border-2 border-[#EBEBEB] outline-none focus:border-[#FF385C] text-base bg-white"
               />
               <Button onClick={handleCreate} className="rounded-2xl bg-[#FF385C] hover:bg-[#E31C5F] text-white px-4">
                 OK
