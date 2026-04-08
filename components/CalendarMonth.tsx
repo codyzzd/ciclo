@@ -65,13 +65,13 @@ export function CalendarMonth({ year, month, mode, prediction, markedDates, getD
 
   return (
     <div className="px-4 pb-6">
-      <h2 className="text-center font-bold text-gray-900 text-lg mb-4">
+      <h2 className="text-center font-bold text-[#222222] text-xl mb-4">
         {MONTHS_PT[month]} {year}
       </h2>
 
       <div className="grid grid-cols-7 mb-2">
         {WEEK_DAYS.map(d => (
-          <div key={d} className="text-center text-xs font-medium text-gray-400 py-1">{d}</div>
+          <div key={d} className="text-center text-xs font-medium text-[#717171] py-1">{d}</div>
         ))}
       </div>
 
@@ -92,22 +92,22 @@ export function CalendarMonth({ year, month, mode, prediction, markedDates, getD
 
           if (isPeriod) {
             const intensity = dayData?.intensidade
-            if (intensity === 'leve')        cellClass = 'bg-[#e57399]'
-            else if (intensity === 'intenso') cellClass = 'bg-[#880e4f]'
-            else                              cellClass = 'bg-[#c2185b]'
+            if (intensity === 'leve')        cellClass = 'bg-[#FF7699]'
+            else if (intensity === 'intenso') cellClass = 'bg-[#C2185B]'
+            else                              cellClass = 'bg-[#FF385C]'
             numberClass = 'text-white font-bold'
           } else if (mode === 'sex' && hasSexo) {
-            cellClass = 'bg-[#880e4f]/20 ring-2 ring-[#ad1457]/40'
-            numberClass = 'text-[#ad1457] font-bold'
+            cellClass = 'bg-[#F5F3FF] ring-2 ring-[#7C3AED]/30'
+            numberClass = 'text-[#7C3AED] font-bold'
           } else if (isPredicted && (isCurrentMonth || mode === 'sex')) {
-            cellClass = 'bg-[#fce4ec]'
-            numberClass = 'text-[#c2185b] font-semibold'
+            cellClass = 'bg-[#FFF0F2]'
+            numberClass = 'text-[#FF385C] font-semibold'
           } else if (isOvulation && isCurrentMonth) {
-            cellClass = 'bg-[#80cbc4] ring-2 ring-[#26a69a]'
-            numberClass = 'text-[#004d40] font-bold'
+            cellClass = 'bg-[#00A699] ring-2 ring-[#007A73]'
+            numberClass = 'text-white font-bold'
           } else if (isFertile && isCurrentMonth) {
-            cellClass = 'bg-[#e0f2f1]'
-            numberClass = 'text-[#00695c] font-semibold'
+            cellClass = 'bg-[#E6F7F6]'
+            numberClass = 'text-[#007A73] font-semibold'
           }
 
           const isFuture = dateStr > todayStr
@@ -147,7 +147,7 @@ export function CalendarMonth({ year, month, mode, prediction, markedDates, getD
                   transition-all duration-150 select-none
                   ${isFuture ? 'cursor-default' : 'active:scale-90'}
                   ${cellClass}
-                  ${isToday && !cellClass ? 'ring-2 ring-[#c2185b]/30' : ''}
+                  ${isToday && !cellClass ? 'ring-2 ring-[#FF385C]/40' : ''}
                   ${isOtherMonth && mode !== 'sex' ? 'opacity-25' : ''}
                   ${isFuture && !isOtherMonth ? 'opacity-35' : ''}
                 `}
@@ -162,16 +162,16 @@ export function CalendarMonth({ year, month, mode, prediction, markedDates, getD
                     <FontAwesomeIcon icon={faDroplet} className="w-2.5 h-2.5 text-white" />
                   )}
                   {!isPeriod && isPredicted && isCurrentMonth && (
-                    <FontAwesomeIcon icon={faDroplet} className="w-2.5 h-2.5 text-[#c2185b]" />
+                    <FontAwesomeIcon icon={faDroplet} className="w-2.5 h-2.5 text-[#FF385C]" />
                   )}
                   {!isPeriod && !isPredicted && isFertile && isCurrentMonth && (
-                    <FontAwesomeIcon icon={faSeedling} className="w-2.5 h-2.5 text-[#00897b]" />
+                    <FontAwesomeIcon icon={faSeedling} className="w-2.5 h-2.5 text-[#00A699]" />
                   )}
                   {!isPeriod && !isPredicted && isOvulation && isCurrentMonth && (
-                    <FontAwesomeIcon icon={faCircleOutline} className="w-2.5 h-2.5 text-[#00695c]" />
+                    <FontAwesomeIcon icon={faCircleOutline} className="w-2.5 h-2.5 text-white" />
                   )}
-                  {mode === 'sex' && hasSexo && !isPeriod && (
-                    <FontAwesomeIcon icon={faHeart} className="w-2.5 h-2.5 text-[#ad1457]" />
+                  {mode === 'sex' && hasSexo && (
+                    <FontAwesomeIcon icon={faHeart} className={`w-2.5 h-2.5 ${isPeriod ? 'text-white/80' : 'text-[#7C3AED]'}`} />
                   )}
                 </span>
 

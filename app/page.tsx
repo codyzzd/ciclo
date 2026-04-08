@@ -45,7 +45,7 @@ export default function Home() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-[#fdf6f7] flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="w-8 h-8 rounded-full border-2 border-[#c2185b] border-t-transparent animate-spin" />
       </div>
     )
@@ -53,7 +53,7 @@ export default function Home() {
 
   if (profiles.length === 0) {
     return (
-      <div className="min-h-screen bg-[#fdf6f7] flex flex-col items-center justify-center px-8 gap-6">
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center px-8 gap-6">
         <div className="text-6xl">🩷</div>
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Bem-vinda ao Ciclo</h1>
@@ -63,7 +63,7 @@ export default function Home() {
         </div>
         <button
           onClick={() => setShowManager(true)}
-          className="w-full max-w-xs bg-[#c2185b] text-white font-semibold py-4 rounded-2xl active:scale-95 transition-transform"
+          className="w-full max-w-xs bg-[#FF385C] hover:bg-[#E31C5F] text-white font-semibold py-4 rounded-full active:scale-95 transition-all"
         >
           Criar perfil
         </button>
@@ -81,7 +81,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fdf6f7]">
+    <div className="min-h-screen bg-white">
       <div className="max-w-md mx-auto">
 
         {/* Sticky top block: header + prediction banner */}
@@ -92,9 +92,9 @@ export default function Home() {
           />
 
           {prediction.nextPeriodStart && (
-            <div className="bg-white border-b border-[#f8bbd0]/60 px-4 py-3 flex items-center justify-between gap-3">
+            <div className="bg-white border-b border-[#EBEBEB] px-4 py-3 flex items-center justify-between gap-3">
               <div className="min-w-0">
-                <p className="text-[11px] text-[#c2185b] font-semibold uppercase tracking-wide leading-none mb-0.5">
+                <p className="text-[11px] text-[#FF385C] font-semibold uppercase tracking-wide leading-none mb-0.5">
                   Próximo período
                 </p>
                 <p className="text-xl font-bold text-gray-900 leading-tight">
@@ -106,7 +106,7 @@ export default function Home() {
               </div>
               {prediction.ovulationDate && (
                 <div className="text-right flex-shrink-0">
-                  <p className="text-[11px] text-[#00897b] font-semibold uppercase tracking-wide leading-none mb-0.5">
+                  <p className="text-[11px] text-[#00A699] font-semibold uppercase tracking-wide leading-none mb-0.5">
                     Ovulação
                   </p>
                   <p className="text-base font-bold text-gray-700 leading-tight">

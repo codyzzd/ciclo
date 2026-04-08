@@ -36,9 +36,9 @@ export function ProfileManager({ open, profiles, currentProfileId, onSwitch, onC
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="rounded-3xl max-w-sm mx-auto">
+      <DialogContent className="rounded-2xl max-w-sm mx-auto">
         <DialogHeader>
-          <DialogTitle className="text-center text-[#c2185b]">Perfis</DialogTitle>
+          <DialogTitle className="text-center text-[#222222]">Perfis</DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col gap-2 mt-2">
@@ -48,16 +48,16 @@ export function ProfileManager({ open, profiles, currentProfileId, onSwitch, onC
                 onClick={() => handleSelect(p.id)}
                 className={`flex-1 flex items-center gap-3 px-4 py-3 rounded-2xl transition-all text-left ${
                   p.id === currentProfileId
-                    ? 'bg-[#fce4ec] border-2 border-[#c2185b]'
-                    : 'bg-[#fafafa] border-2 border-transparent hover:bg-[#fce4ec]/40'
+                    ? 'bg-[#FFF0F2] border-2 border-[#FF385C]'
+                    : 'bg-[#F7F7F7] border-2 border-transparent hover:bg-[#F7F7F7]'
                 }`}
               >
-                <div className="w-9 h-9 rounded-full bg-[#f8bbd0] flex items-center justify-center text-[#c2185b] text-sm font-bold">
+                <div className="w-9 h-9 rounded-full bg-[#FFF0F2] flex items-center justify-center text-[#FF385C] text-sm font-bold">
                   {p.nome[0].toUpperCase()}
                 </div>
                 <span className="font-medium text-gray-800">{p.nome}</span>
                 {p.id === currentProfileId && (
-                  <span className="ml-auto text-xs text-[#c2185b]">✓</span>
+                  <span className="ml-auto text-xs text-[#FF385C]">✓</span>
                 )}
               </button>
 
@@ -87,16 +87,16 @@ export function ProfileManager({ open, profiles, currentProfileId, onSwitch, onC
                 onChange={e => setNome(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleCreate()}
                 placeholder="Nome do perfil"
-                className="flex-1 px-4 py-3 rounded-2xl border-2 border-[#f8bbd0] outline-none focus:border-[#c2185b] text-sm bg-white"
+                className="flex-1 px-4 py-3 rounded-2xl border-2 border-[#EBEBEB] outline-none focus:border-[#FF385C] text-sm bg-white"
               />
-              <Button onClick={handleCreate} className="rounded-2xl bg-[#c2185b] hover:bg-[#ad1457] text-white px-4">
+              <Button onClick={handleCreate} className="rounded-2xl bg-[#FF385C] hover:bg-[#E31C5F] text-white px-4">
                 OK
               </Button>
             </div>
           ) : (
             <button
               onClick={() => setCreating(true)}
-              className="mt-2 py-3 rounded-2xl border-2 border-dashed border-[#f8bbd0] text-[#c2185b] text-sm font-medium hover:border-[#c2185b] transition-colors"
+              className="mt-2 py-3 rounded-2xl border-2 border-dashed border-[#EBEBEB] text-[#FF385C] text-sm font-medium hover:border-[#FF385C] transition-colors"
             >
               + Novo perfil
             </button>

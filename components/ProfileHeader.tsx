@@ -9,10 +9,10 @@ interface Props {
 
 export function ProfileHeader({ profile, onOpenManager }: Props) {
   return (
-    <header className="flex items-center gap-3 px-4 py-4 bg-white/80 backdrop-blur-sm border-b border-[#f8bbd0]/40">
+    <header className="flex items-center gap-3 px-4 py-4 bg-white/80 backdrop-blur-sm border-b border-[#EBEBEB]">
       <button
         onClick={onOpenManager}
-        className="w-11 h-11 rounded-full bg-[#fce4ec] flex items-center justify-center text-[#c2185b] flex-shrink-0 active:scale-95 transition-transform"
+        className="w-11 h-11 rounded-full bg-[#FFF0F2] flex items-center justify-center text-[#FF385C] flex-shrink-0 active:scale-95 transition-transform"
       >
         {profile ? (
           <span className="text-base font-bold">{profile.nome[0].toUpperCase()}</span>
@@ -28,7 +28,7 @@ export function ProfileHeader({ profile, onOpenManager }: Props) {
         <p className="font-bold text-gray-900 text-base leading-tight truncate">
           {profile?.nome ?? 'Criar perfil'}
         </p>
-        <p className="text-xs text-gray-400 leading-tight">Toque para gerenciar perfis</p>
+        <p className="text-xs text-[#717171] leading-tight">Toque para gerenciar perfis</p>
       </div>
     </header>
   )

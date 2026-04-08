@@ -13,40 +13,31 @@ interface Props {
 export function ModeToggle({ mode, onChange }: Props) {
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30">
-      <div className="flex rounded-2xl overflow-hidden shadow-xl shadow-black/10 border border-white/60 bg-white">
+      <div className="flex rounded-full overflow-hidden shadow-[0_6px_20px_rgba(0,0,0,0.12)] border border-[#EBEBEB] bg-white p-1 gap-1">
 
         {/* Period mode */}
         <button
           onClick={() => onChange('period')}
-          className={`flex items-center gap-2.5 px-5 py-3.5 transition-all duration-200 ${
+          className={`flex items-center gap-2.5 px-5 py-3 rounded-full transition-all duration-200 ${
             mode === 'period'
-              ? 'bg-[#c2185b] text-white'
-              : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+              ? 'bg-gradient-to-r from-[#FF385C] to-[#E31C5F] text-white'
+              : 'text-gray-400 hover:text-gray-600 hover:bg-[#F7F7F7]'
           }`}
         >
-          <FontAwesomeIcon
-            icon={faDroplet}
-            className="w-4 h-4"
-          />
+          <FontAwesomeIcon icon={faDroplet} className="w-4 h-4" />
           <span className="text-sm font-semibold">Menstruação</span>
         </button>
-
-        {/* Divider */}
-        <div className="w-px bg-gray-200 self-stretch" />
 
         {/* Sex mode */}
         <button
           onClick={() => onChange('sex')}
-          className={`flex items-center gap-2.5 px-5 py-3.5 transition-all duration-200 ${
+          className={`flex items-center gap-2.5 px-5 py-3 rounded-full transition-all duration-200 ${
             mode === 'sex'
-              ? 'bg-[#ad1457] text-white'
-              : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+              ? 'bg-[#7C3AED] text-white'
+              : 'text-gray-400 hover:text-gray-600 hover:bg-[#F7F7F7]'
           }`}
         >
-          <FontAwesomeIcon
-            icon={faHeart}
-            className="w-4 h-4"
-          />
+          <FontAwesomeIcon icon={faHeart} className="w-4 h-4" />
           <span className="text-sm font-semibold">Relação</span>
         </button>
 

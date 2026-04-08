@@ -20,9 +20,10 @@ const OPTIONS: { value: Intensidade; label: string; drops: number }[] = [
 export function IntensityPicker({ open, date, current, onSelect, onClose }: Props) {
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent side="bottom" className="rounded-t-3xl pb-10">
+      <SheetContent side="bottom" className="rounded-t-2xl pb-10">
+        <div className="mx-auto mt-2 mb-1 w-10 h-1 rounded-full bg-[#EBEBEB]" />
         <SheetHeader className="mb-6">
-          <SheetTitle className="text-center text-[#c2185b]">Intensidade do fluxo</SheetTitle>
+          <SheetTitle className="text-center text-[#222222]">Intensidade do fluxo</SheetTitle>
         </SheetHeader>
 
         <div className="flex flex-col gap-3 px-2">
@@ -32,12 +33,12 @@ export function IntensityPicker({ open, date, current, onSelect, onClose }: Prop
               onClick={() => { onSelect(opt.value); onClose() }}
               className={`flex items-center justify-between px-5 py-4 rounded-2xl border-2 transition-all ${
                 current === opt.value
-                  ? 'border-[#c2185b] bg-[#fce4ec]'
-                  : 'border-transparent bg-[#fafafa] hover:bg-[#fce4ec]/50'
+                  ? 'border-[#FF385C] bg-[#FFF0F2]'
+                  : 'border-transparent bg-[#F7F7F7] hover:bg-[#F7F7F7]'
               }`}
             >
               <span className="text-base font-medium text-gray-700">{opt.label}</span>
-              <span className="text-[#c2185b] text-xl tracking-wider">
+              <span className="text-[#FF385C] text-xl tracking-wider">
                 {'🩸'.repeat(opt.drops)}
               </span>
             </button>

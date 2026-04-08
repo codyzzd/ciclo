@@ -35,19 +35,19 @@ export function CalendarView({ mode, prediction, markedDates, getDayData, onDayP
       <div className="flex items-center justify-between px-6 py-3">
         <button
           onClick={() => setOffset(o => o - 1)}
-          className="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-[#fce4ec] active:scale-90 transition-all"
+          className="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-[#F7F7F7] active:scale-90 transition-all"
         >
           <ChevronLeft size={20} />
         </button>
         <button
           onClick={() => setOffset(0)}
-          className="text-sm font-medium text-gray-600 hover:text-[#c2185b] transition-colors px-3 py-1 rounded-full hover:bg-[#fce4ec]"
+          className="text-sm font-medium text-gray-600 hover:text-[#FF385C] transition-colors px-3 py-1 rounded-full hover:bg-[#F7F7F7]"
         >
           Hoje
         </button>
         <button
           onClick={() => setOffset(o => o + 1)}
-          className="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-[#fce4ec] active:scale-90 transition-all"
+          className="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-[#F7F7F7] active:scale-90 transition-all"
         >
           <ChevronRight size={20} />
         </button>
@@ -75,22 +75,22 @@ export function CalendarView({ mode, prediction, markedDates, getDayData, onDayP
 
       {/* Legend */}
       <div className="flex items-center justify-center gap-4 px-4 py-4 flex-wrap">
-        <LegendItem color="bg-[#c2185b]" label="Período" />
-        <LegendItem color="bg-[#fce4ec] border border-[#f8bbd0]" label="Previsão" />
-        <LegendItem color="bg-[#e0f2f1] border border-[#80cbc4]" label="Fértil" icon="♡" />
-        <LegendItem color="bg-[#80cbc4] border border-[#26a69a]" label="Ovulação" icon="○" />
+        <LegendItem color="bg-[#FF385C]" label="Período" />
+        <LegendItem color="bg-[#FFF0F2] border border-[#FFB3C0]" label="Previsão" />
+        <LegendItem color="bg-[#E6F7F6] border border-[#00A699]" label="Fértil" icon="♡" iconColor="text-[#007A73]" />
+        <LegendItem color="bg-[#00A699] border border-[#007A73]" label="Ovulação" icon="○" iconColor="text-white" />
       </div>
 
       {prediction.cyclesDetected === 0 && (
-        <div className="mx-4 mb-6 p-4 rounded-2xl bg-[#fafafa] border border-gray-100 text-center">
-          <p className="text-sm text-gray-500">
+        <div className="mx-4 mb-6 p-4 rounded-2xl bg-[#F7F7F7] text-center">
+          <p className="text-sm text-[#717171]">
             Toque nos dias para registrar sua menstruação
           </p>
         </div>
       )}
 
       {prediction.cyclesDetected >= 2 && prediction.averageCycleLength && (
-        <p className="text-center text-xs text-gray-400 mb-6">
+        <p className="text-center text-xs text-[#717171] mb-6">
           Ciclo médio: {prediction.averageCycleLength} dias · {prediction.cyclesDetected} ciclos detectados
         </p>
       )}
@@ -98,13 +98,13 @@ export function CalendarView({ mode, prediction, markedDates, getDayData, onDayP
   )
 }
 
-function LegendItem({ color, label, icon }: { color: string; label: string; icon?: string }) {
+function LegendItem({ color, label, icon, iconColor }: { color: string; label: string; icon?: string; iconColor?: string }) {
   return (
     <div className="flex items-center gap-1.5">
       <div className={`w-5 h-5 rounded-full ${color} flex items-center justify-center`}>
-        {icon && <span className="text-[9px] text-[#00695c]">{icon}</span>}
+        {icon && <span className={`text-[9px] ${iconColor ?? 'text-[#007A73]'}`}>{icon}</span>}
       </div>
-      <span className="text-xs text-gray-500">{label}</span>
+      <span className="text-xs text-[#717171]">{label}</span>
     </div>
   )
 }
