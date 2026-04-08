@@ -11,12 +11,24 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: "Ciclo",
   description: "Acompanhe seu ciclo menstrual",
+  icons: {
+    icon: "/icons/icon-192.png",
+    shortcut: "/icons/icon-32.png",
+    apple: "/icons/apple-touch-icon.png",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Ciclo",
+  },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
+  viewportFit: "cover",
+  themeColor: "#FF385C",
 };
 
 export default function RootLayout({
