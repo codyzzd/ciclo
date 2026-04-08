@@ -10,7 +10,8 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: "Meu Ciclo",
-  description: "Acompanhe seu ciclo menstrual",
+  description: "Acompanhe seu ciclo menstrual de forma simples e inteligente.",
+  manifest: "/manifest.webmanifest",
   icons: {
     icon: "/icons/icon-192.png",
     shortcut: "/icons/icon-32.png",
@@ -20,6 +21,26 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: "default",
     title: "Meu Ciclo",
+  },
+  openGraph: {
+    title: "Meu Ciclo",
+    description: "Acompanhe seu ciclo menstrual de forma simples e inteligente.",
+    type: "website",
+    locale: "pt_BR",
+    images: [
+      {
+        url: "/icons/icon-512.png",
+        width: 512,
+        height: 512,
+        alt: "Meu Ciclo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "Meu Ciclo",
+    description: "Acompanhe seu ciclo menstrual de forma simples e inteligente.",
+    images: ["/icons/icon-512.png"],
   },
 };
 
