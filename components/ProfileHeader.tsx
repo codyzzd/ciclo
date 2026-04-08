@@ -20,7 +20,7 @@ export function ProfileHeader({ profile, onOpenManager }: Props) {
   }
 
   return (
-    <header className="flex items-center gap-3 px-4 py-4 bg-white/80 backdrop-blur-sm border-b border-[#EBEBEB]">
+    <header className="flex items-center gap-3 px-4 py-4 bg-white border-b border-[#EBEBEB]">
       <div className="flex-1 min-w-0 cursor-pointer" onClick={onOpenManager}>
         <p className="font-bold text-gray-900 text-base leading-tight truncate">
           {profile?.nome ?? 'Criar perfil'}

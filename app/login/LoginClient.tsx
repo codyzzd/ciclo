@@ -75,7 +75,7 @@ export function LoginClient() {
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-8">
       <div className="w-full max-w-xs">
         {/* Logo */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-10 anim-1">
           <div className="text-5xl mb-3">🩷</div>
           <h1 className="text-2xl font-bold text-gray-900">Meu Ciclo</h1>
           <p className="text-gray-400 text-sm mt-1">
@@ -84,7 +84,7 @@ export function LoginClient() {
         </div>
 
         {/* Toggle */}
-        <div className="flex bg-gray-100 rounded-full p-1 mb-8">
+        <div className="flex bg-gray-100 rounded-full p-1 mb-8 anim-2">
           <button
             type="button"
             onClick={() => { setMode('login'); setError(null) }}
@@ -110,7 +110,7 @@ export function LoginClient() {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 anim-3">
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1.5 uppercase tracking-wide">
               E-mail

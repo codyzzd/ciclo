@@ -12,7 +12,7 @@ interface Props {
 
 export function ModeToggle({ mode, onChange }: Props) {
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30">
+    <div className="fixed bottom-[90px] left-1/2 -translate-x-1/2 z-30">
       <div className="flex rounded-full overflow-hidden shadow-[0_6px_20px_rgba(0,0,0,0.12)] border border-[#EBEBEB] bg-white p-1 gap-1">
 
         {/* Period mode */}

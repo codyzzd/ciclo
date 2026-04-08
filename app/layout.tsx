@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { DM_Sans } from "next/font/google";
+import { Nunito } from "next/font/google";
 import "./globals.css";
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const nunito = Nunito({
+  variable: "--font-nunito",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -27,14 +27,7 @@ export const metadata: Metadata = {
     description: "Acompanhe seu ciclo menstrual de forma simples e inteligente.",
     type: "website",
     locale: "pt_BR",
-    images: [
-      {
-        url: "/icons/icon-512.png",
-        width: 512,
-        height: 512,
-        alt: "Meu Ciclo",
-      },
-    ],
+    images: [{ url: "/icons/icon-512.png", width: 512, height: 512, alt: "Meu Ciclo" }],
   },
   twitter: {
     card: "summary",
@@ -60,9 +53,9 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${dmSans.variable} h-full antialiased`}
+      className={`${nunito.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className={`${nunito.className} min-h-full flex flex-col`}>{children}</body>
     </html>
   );
 }

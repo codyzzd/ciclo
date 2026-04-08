@@ -3,10 +3,12 @@
 import { useState } from 'react'
 import { useCycleData } from '@/hooks/useCycleData'
 import { ProfileHeader } from '@/components/ProfileHeader'
-import { CalendarView } from '@/components/CalendarView'
 import { ProfileManager } from '@/components/ProfileManager'
-import { IntensityPicker } from '@/components/IntensityPicker'
+import { BottomNav, type AppTab } from '@/components/BottomNav'
 import { ModeToggle, type CalendarMode } from '@/components/ModeToggle'
+import { HomeTab } from '@/components/views/HomeTab'
+import { CalendarTab } from '@/components/views/CalendarTab'
+import { InsightsTab } from '@/components/views/InsightsTab'
 
 export function HomeClient() {
   const {
@@ -27,33 +29,20 @@ export function HomeClient() {
   } = useCycleData()
 
   const [showManager, setShowManager] = useState(false)
-  const [mode, setMode] = useState<CalendarMode>('period')
-  const [intensityDate, setIntensityDate] = useState<string | null>(null)
-
-  function handleDayPress(date: string) {
-    if (!currentProfileId) { setShowManager(true); return }
-    if (mode === 'period') toggleMenstruou(date)
-    else toggleSexo(date)
-  }
-
-  function handleLongPress(date: string) {
-    if (!currentProfileId) return
-    if (mode === 'period' && getDayData(date)?.menstruou) {
-      setIntensityDate(date)
-    }
-  }
+  const [tab, setTab] = useState<AppTab>('home')
+  const [calendarMode, setCalendarMode] = useState<CalendarMode>('period')
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="w-8 h-8 rounded-full border-2 border-[#c2185b] border-t-transparent animate-spin" />
+      <div className="h-dvh bg-white flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full border-2 border-[#FF385C] border-t-transparent animate-spin" />
       </div>
     )
   }
 
   if (profiles.length === 0) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center px-8 gap-6">
+      <div className="h-dvh bg-white flex flex-col items-center justify-center px-8 gap-6">
         <div className="text-6xl">🩷</div>
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Bem-vinda ao Meu Ciclo</h1>
@@ -82,73 +71,62 @@ export function HomeClient() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-md mx-auto">
+    <div className="h-dvh flex flex-col bg-white w-full max-w-md mx-auto">
 
-        <div className="sticky top-0 z-20">
-          <ProfileHeader
-            profile={currentProfile}
-            onOpenManager={() => setShowManager(true)}
-          />
+      {/* Header — nunca scrollar */}
+      <div className="flex-shrink-0 z-20 anim-1">
+        <ProfileHeader
+          profile={currentProfile}
+          onOpenManager={() => setShowManager(true)}
+        />
+      </div>
 
-          {prediction.nextPeriodStart && (
-            <div className="bg-white border-b border-[#EBEBEB] px-4 py-3 flex items-center justify-between gap-3">
-              <div className="min-w-0">
-                <p className="text-[11px] text-[#FF385C] font-semibold uppercase tracking-wide leading-none mb-0.5">
-                  Próximo período
-                </p>
-                <p className="text-xl font-bold text-gray-900 leading-tight">
-                  {prediction.nextPeriodStart.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' })}
-                </p>
-                {prediction.cyclesDetected === 1 && (
-                  <p className="text-xs text-[#717171] mt-0.5">Ciclo estimado de {prediction.averageCycleLength ?? 28} dias</p>
-                )}
-              </div>
-              {prediction.ovulationDate && (
-                <div className="text-right flex-shrink-0">
-                  <p className="text-[11px] text-[#00A699] font-semibold uppercase tracking-wide leading-none mb-0.5">
-                    Ovulação
-                  </p>
-                  <p className="text-base font-bold text-gray-700 leading-tight">
-                    {prediction.ovulationDate.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' })}
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        <main className="pb-32">
-          <CalendarView
-            mode={mode}
+      {/* Conteúdo — scroll isolado */}
+      <div className="flex-1 overflow-y-auto overscroll-contain overflow-x-hidden">
+        {tab === 'home' && (
+          <HomeTab prediction={prediction} markedDates={markedDates} />
+        )}
+        {tab === 'calendar' && (
+          <CalendarTab
+            mode={calendarMode}
             prediction={prediction}
             markedDates={markedDates}
             getDayData={getDayData}
-            onDayPress={handleDayPress}
-            onLongPress={handleLongPress}
+            toggleMenstruou={toggleMenstruou}
+            toggleSexo={toggleSexo}
+            setIntensidade={setIntensidade}
+            currentProfileId={currentProfileId}
+            onOpenManager={() => setShowManager(true)}
           />
-        </main>
-
-        <ModeToggle mode={mode} onChange={setMode} />
-
-        <ProfileManager
-          open={showManager}
-          profiles={profiles}
-          currentProfileId={currentProfileId}
-          onSwitch={switchProfile}
-          onCreate={createProfile}
-          onRename={renameProfile}
-          onDelete={deleteProfile}
-          onClose={() => setShowManager(false)}
-        />
-        <IntensityPicker
-          open={intensityDate !== null}
-          date={intensityDate}
-          current={intensityDate ? getDayData(intensityDate)?.intensidade ?? null : null}
-          onSelect={(i) => { if (intensityDate) setIntensidade(intensityDate, i); setIntensityDate(null) }}
-          onClose={() => setIntensityDate(null)}
-        />
+        )}
+        {tab === 'insights' && (
+          <InsightsTab
+            markedDates={markedDates}
+            profileName={currentProfile?.nome ?? null}
+          />
+        )}
       </div>
+
+      {/* ModeToggle fora de qualquer container animado — só aparece no calendário */}
+      {tab === 'calendar' && (
+        <ModeToggle mode={calendarMode} onChange={setCalendarMode} />
+      )}
+
+      {/* Navbar — nunca scrollar */}
+      <div className="flex-shrink-0 z-30">
+        <BottomNav active={tab} onChange={setTab} />
+      </div>
+
+      <ProfileManager
+        open={showManager}
+        profiles={profiles}
+        currentProfileId={currentProfileId}
+        onSwitch={switchProfile}
+        onCreate={createProfile}
+        onRename={renameProfile}
+        onDelete={deleteProfile}
+        onClose={() => setShowManager(false)}
+      />
     </div>
   )
 }
