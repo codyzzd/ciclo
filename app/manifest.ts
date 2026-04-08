@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Ciclo',
-    short_name: 'Ciclo',
+    name: 'Meu Ciclo',
+    short_name: 'Meu Ciclo',
     description: 'Acompanhe seu ciclo menstrual',
     start_url: '/',
     display: 'standalone',

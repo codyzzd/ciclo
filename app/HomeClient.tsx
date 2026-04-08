@@ -56,7 +56,7 @@ export function HomeClient() {
       <div className="min-h-screen bg-white flex flex-col items-center justify-center px-8 gap-6">
         <div className="text-6xl">🩷</div>
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Bem-vinda ao Ciclo</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Bem-vinda ao Meu Ciclo</h1>
           <p className="text-gray-500 text-sm leading-relaxed">
             Acompanhe seu ciclo menstrual de forma simples e inteligente
           </p>

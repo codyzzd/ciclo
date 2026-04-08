@@ -77,7 +77,7 @@ export function LoginClient() {
         {/* Logo */}
         <div className="text-center mb-10">
           <div className="text-5xl mb-3">🩷</div>
-          <h1 className="text-2xl font-bold text-gray-900">Ciclo</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Meu Ciclo</h1>
           <p className="text-gray-400 text-sm mt-1">
             {mode === 'login' ? 'Bem-vinda de volta' : 'Crie sua conta'}
           </p>

@@ -9,7 +9,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Ciclo",
+  title: "Meu Ciclo",
   description: "Acompanhe seu ciclo menstrual",
   icons: {
     icon: "/icons/icon-192.png",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Ciclo",
+    title: "Meu Ciclo",
   },
 };
 
