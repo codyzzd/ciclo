@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
+import { SplashScreen } from "@/components/SplashScreen";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -55,7 +56,10 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${nunito.variable} h-full antialiased`}
     >
-      <body className={`${nunito.className} min-h-full flex flex-col bg-white`}>{children}</body>
+      <body className={`${nunito.className} min-h-full flex flex-col bg-white`}>
+        <SplashScreen />
+        {children}
+      </body>
     </html>
   );
 }

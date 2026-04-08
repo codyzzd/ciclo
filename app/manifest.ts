@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'Acompanhe seu ciclo menstrual',
     start_url: '/',
     display: 'standalone',
-    background_color: '#ffffff',
+    background_color: '#fdf6f7',
     theme_color: '#FF385C',
     icons: [
       { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
