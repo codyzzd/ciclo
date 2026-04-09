@@ -100,7 +100,7 @@ export function CalendarMonth({ year, month, mode, prediction, markedDates, getD
             else if (intensity === 'intenso') cellClass = 'bg-[#C2185B]'
             else                              cellClass = 'bg-[#FF385C]'
             numberClass = 'text-white font-bold'
-          } else if (isPredicted && (isCurrentMonth || mode === 'sex')) {
+          } else if (isPredicted && isCurrentMonth) {
             cellClass = 'bg-[#FFF0F2]'
             numberClass = 'text-[#FF385C] font-semibold'
           } else if (isOvulation && isCurrentMonth) {
@@ -149,11 +149,11 @@ export function CalendarMonth({ year, month, mode, prediction, markedDates, getD
                   ${isFuture ? 'cursor-default' : 'active:scale-90'}
                   ${cellClass}
                   ${isToday ? 'ring-2 ring-gray-900 ring-offset-1' : ''}
-                  ${isOtherMonth && mode !== 'sex' ? 'opacity-25' : ''}
+                  ${isOtherMonth ? 'opacity-25' : ''}
                   ${isFuture && !isOtherMonth ? 'opacity-35' : ''}
                 `}
               >
-                <span className={`text-sm leading-none ${numberClass || (isOtherMonth && mode !== 'sex' ? 'text-gray-400' : 'text-gray-800')}`}>
+                <span className={`text-sm leading-none ${numberClass || (isOtherMonth ? 'text-gray-400' : 'text-gray-800')}`}>
                   {date.getDate()}
                 </span>
 

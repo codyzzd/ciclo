@@ -1,5 +1,5 @@
 <!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
+# Next.js 16 — leia antes de escrever código
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+Esta versão tem breaking changes. Consulte `node_modules/next/dist/docs/` antes de usar qualquer API do framework. Respeite avisos de deprecação.
 <!-- END:nextjs-agent-rules -->

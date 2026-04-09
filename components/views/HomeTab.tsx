@@ -18,7 +18,6 @@ const PHASE_COLORS: Record<string, string> = {
   predicted: 'bg-[#FFB3C0]',
   ovulation: 'bg-[#00A699]',
   fertile:   'bg-[#6EE7E2]',
-  today:     'bg-white border-2 border-[#FF385C]',
   normal:    'bg-[#EBEBEB]',
 }
 
@@ -40,8 +39,7 @@ export function HomeTab({ prediction, markedDates }: Props) {
     const isToday = ds === todayStr
 
     let phase: keyof typeof PHASE_COLORS = 'normal'
-    if (isToday)                                       phase = 'today'
-    else if (markedSet.has(ds))                        phase = 'period'
+    if (markedSet.has(ds))                             phase = 'period'
     else if (prediction.ovulationDays.has(ds))         phase = 'ovulation'
     else if (prediction.fertileDays.has(ds))           phase = 'fertile'
     else if (prediction.predictedPeriodDays.has(ds))   phase = 'predicted'
@@ -71,14 +69,14 @@ export function HomeTab({ prediction, markedDates }: Props) {
 
       {/* Strip */}
       <div className="px-4 mb-6 anim-2">
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Próximos 15 dias</p>
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Timeline</p>
         <div className="flex items-end">
           {stripDays.map(({ dateStr, isToday, phase }) => (
             <div key={dateStr} className="flex-1 flex flex-col items-center gap-2">
               <span className="text-[8px] text-gray-500 font-semibold">{weekDayShort(dateStr)}</span>
               <div className={`rounded-full ${
                 isToday
-                  ? 'w-4 h-4 ring-2 ring-[#FF385C] ring-offset-1 bg-[#FF385C]'
+                  ? `w-4 h-4 ring-2 ring-black ring-offset-1 ${PHASE_COLORS[phase]}`
                   : `w-3 h-3 ${PHASE_COLORS[phase]}`
               }`} />
             </div>

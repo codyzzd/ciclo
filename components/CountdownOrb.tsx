@@ -24,6 +24,15 @@ export function CountdownOrb({ daysUntil, avgCycle }: Props) {
     ? Math.max(0, Math.min(1, (avgCycle - Math.max(0, daysUntil)) / avgCycle))
     : 0
 
+  const state = daysUntil === null ? 'sem-dados'
+    : daysUntil < 0  ? 'atrasado'
+    : daysUntil === 0 ? 'hoje'
+    : daysUntil <= 5  ? 'em-breve'
+    : 'normal'
+
+  const durationMult  = state === 'hoje' ? 0.5 : state === 'atrasado' ? 2.2 : 1.0
+  const amplitudeMult = state === 'atrasado' ? 2.0 : 1.0
+
   const dots = useMemo(() => {
     const result: {
       x: number; y: number
@@ -56,7 +65,8 @@ export function CountdownOrb({ daysUntil, avgCycle }: Props) {
   }, [])
 
   function dotColor(closeness: number): string {
-    const t = Math.min(1, Math.max(0, progress * (closeness * 2 + 0.05)))
+    const effectiveProgress = state === 'em-breve' ? 0.35 : progress
+    const t = Math.min(1, Math.max(0, effectiveProgress * (closeness * 2 + 0.05)))
     const r = Math.round(229 + (255 - 229) * t)
     const g = Math.round(231 + (56  - 231) * t)
     const b = Math.round(235 + (92  - 235) * t)
@@ -94,20 +104,24 @@ export function CountdownOrb({ daysUntil, avgCycle }: Props) {
         </radialGradient>
       </defs>
 
-      {dots.map(({ x, y, ndx, ndy, closeness, r, amplitude, duration, delay }, idx) => (
-        <circle key={idx} cx={x} cy={y} r={r} fill={dotColor(closeness)}>
-          <animateTransform
-            attributeName="transform"
-            type="translate"
-            values={`0 0; ${(ndx * amplitude).toFixed(2)} ${(ndy * amplitude).toFixed(2)}; 0 0`}
-            dur={`${duration.toFixed(2)}s`}
-            begin={`-${(delay % duration).toFixed(2)}s`}
-            repeatCount="indefinite"
-            calcMode="spline"
-            keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"
-          />
-        </circle>
-      ))}
+      {dots.map(({ x, y, ndx, ndy, closeness, r, amplitude, duration, delay }, idx) => {
+        const adjDur = duration * durationMult
+        const adjAmp = amplitude * amplitudeMult
+        return (
+          <circle key={idx} cx={x} cy={y} r={r} fill={dotColor(closeness)}>
+            <animateTransform
+              attributeName="transform"
+              type="translate"
+              values={`0 0; ${(ndx * adjAmp).toFixed(2)} ${(ndy * adjAmp).toFixed(2)}; 0 0`}
+              dur={`${adjDur.toFixed(2)}s`}
+              begin={`-${(delay % adjDur).toFixed(2)}s`}
+              repeatCount="indefinite"
+              calcMode="spline"
+              keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"
+            />
+          </circle>
+        )
+      })}
 
       <circle cx={CX} cy={CY} r={CIRCLE_R} fill="url(#orbGrad)" />
       <circle cx={CX} cy={CY} r={CIRCLE_R} fill="none" stroke="#FFB3C0" strokeWidth="1.5" />
