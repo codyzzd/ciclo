@@ -49,7 +49,7 @@ export function LoginClient() {
 
   if (mode === 'check-email') {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center px-8 gap-6">
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-8 gap-6">
         <div className="text-6xl">📬</div>
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Confirme seu e-mail</h1>
@@ -72,7 +72,7 @@ export function LoginClient() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-8">
+    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-8">
       <div className="w-full max-w-xs">
         {/* Logo */}
         <div className="text-center mb-10 anim-1">

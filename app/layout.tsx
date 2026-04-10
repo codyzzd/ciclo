@@ -56,7 +56,7 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${nunito.variable} h-full antialiased`}
     >
-      <body className={`${nunito.className} min-h-full flex flex-col bg-white`}>
+      <body className={`${nunito.className} min-h-full flex flex-col bg-slate-50`}>
         <SplashScreen />
         {children}
       </body>

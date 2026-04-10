@@ -2,7 +2,7 @@
 
 import { ResponsiveContainer, LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ReferenceLine } from 'recharts'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChartBar } from '@fortawesome/free-solid-svg-icons'
+import { faChartBar, faArrowRight, faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { getCycleInsights } from '@/lib/insights-logic'
 
 interface Props {
@@ -16,7 +16,7 @@ export function InsightsTab({ markedDates, profileName }: Props) {
   if (!insights.hasEnoughData) {
     return (
       <div className="h-full flex flex-col items-center justify-center px-8 gap-4">
-        <div className="w-16 h-16 rounded-2xl bg-[#FFF0F2] flex items-center justify-center">
+        <div className="w-16 h-16 rounded-lg bg-[#FFF0F2] flex items-center justify-center">
           <FontAwesomeIcon icon={faChartBar} className="w-7 h-7 text-[#FF385C]" />
         </div>
         <div className="text-center">
@@ -34,9 +34,9 @@ export function InsightsTab({ markedDates, profileName }: Props) {
   const chartData = cycleLengths.map((len, i) => ({ ciclo: `C${i + 1}`, dias: len }))
 
   const trendConfig = {
-    estável:     { icon: '→', color: 'text-gray-600' },
-    encurtando:  { icon: '↓', color: 'text-[#F59E0B]' },
-    aumentando:  { icon: '↑', color: 'text-[#00A699]' },
+    estável:     { icon: faArrowRight, color: 'text-gray-600' },
+    encurtando:  { icon: faArrowDown,  color: 'text-[#F59E0B]' },
+    aumentando:  { icon: faArrowUp,    color: 'text-[#00A699]' },
   }[trend ?? 'estável']
 
   const varConfig = {
@@ -46,41 +46,33 @@ export function InsightsTab({ markedDates, profileName }: Props) {
   }[variationLabel ?? 'regular']
 
   return (
-    <div className="flex flex-col bg-white pb-6">
-      {/* Header */}
-      <div className="px-4 pt-6 pb-4">
-        <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">
-          {profileName ?? 'Perfil'}
-        </p>
-        <h1 className="text-xl font-bold text-gray-900">Insights do ciclo</h1>
-      </div>
-
+    <div className="flex flex-col bg-slate-50 pb-6">
       {/* Cards grid */}
-      <div className="px-4 grid grid-cols-2 gap-3 mb-6 anim-1">
+      <div className="px-4 pt-4 grid grid-cols-2 gap-2 mb-2 anim-1">
 
         {/* Ciclo médio */}
-        <div className="rounded-2xl bg-[#FFF0F2] px-4 py-4">
+        <div className="rounded-lg bg-[#FFF0F2] border border-slate-200 px-4 py-4">
           <p className="text-[10px] font-semibold text-[#FF385C] uppercase tracking-wide mb-1">Ciclo médio</p>
           <p className="text-3xl font-bold text-gray-900">{averageCycle}</p>
           <p className="text-xs text-gray-600">dias</p>
         </div>
 
         {/* Variação */}
-        <div className={`rounded-2xl px-4 py-4 ${varConfig.bg}`}>
+        <div className={`rounded-lg border border-slate-200 px-4 py-4 ${varConfig.bg}`}>
           <p className={`text-[10px] font-semibold uppercase tracking-wide mb-1 ${varConfig.color}`}>Variação</p>
           <p className="text-3xl font-bold text-gray-900">±{variation}</p>
           <p className={`text-xs font-medium ${varConfig.color}`}>{variationLabel}</p>
         </div>
 
         {/* Tendência */}
-        <div className="rounded-2xl bg-[#F7F7F7] px-4 py-4">
+        <div className="rounded-lg bg-white border border-slate-200 px-4 py-4">
           <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide mb-1">Tendência</p>
-          <p className={`text-2xl font-bold ${trendConfig.color}`}>{trendConfig.icon}</p>
+          <FontAwesomeIcon icon={trendConfig.icon} className={`w-6 h-6 ${trendConfig.color}`} />
           <p className="text-xs text-gray-700 font-medium capitalize">{trend}</p>
         </div>
 
         {/* Prob. atraso */}
-        <div className="rounded-2xl bg-[#F7F7F7] px-4 py-4">
+        <div className="rounded-lg bg-white border border-slate-200 px-4 py-4">
           <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide mb-1">Prob. atraso</p>
           <p className="text-3xl font-bold text-gray-900">{delayProbability}%</p>
           <p className="text-xs text-gray-600">chance</p>
@@ -88,8 +80,8 @@ export function InsightsTab({ markedDates, profileName }: Props) {
       </div>
 
       {/* Confidence bar */}
-      <div className="px-4 mb-6 anim-2">
-        <div className="rounded-2xl bg-[#F7F7F7] px-4 py-4">
+      <div className="px-4 mb-2 anim-2">
+        <div className="rounded-lg bg-white border border-slate-200 px-4 py-4">
           <div className="flex items-center justify-between mb-2">
             <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Confiabilidade</p>
             <span className="text-sm font-bold text-gray-900">{confidence}%</span>
@@ -107,9 +99,9 @@ export function InsightsTab({ markedDates, profileName }: Props) {
       </div>
 
       {/* Line chart - histórico */}
-      <div className="px-4 mb-6 anim-3">
+      <div className="px-4 mb-2 anim-3">
         <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-3">Histórico de ciclos</p>
-        <div className="rounded-2xl bg-[#F7F7F7] p-4">
+        <div className="rounded-lg bg-white border border-slate-200 p-4">
           <ResponsiveContainer width="100%" height={160}>
             <LineChart data={chartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
               <XAxis dataKey="ciclo" tick={{ fontSize: 11, fill: '#6B7280' }} axisLine={false} tickLine={false} />
@@ -134,9 +126,9 @@ export function InsightsTab({ markedDates, profileName }: Props) {
       </div>
 
       {/* Bar chart - variação */}
-      <div className="px-4 mb-4">
+      <div className="px-4 mb-2">
         <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-3">Duração por ciclo</p>
-        <div className="rounded-2xl bg-[#F7F7F7] p-4">
+        <div className="rounded-lg bg-white border border-slate-200 p-4">
           <ResponsiveContainer width="100%" height={120}>
             <BarChart data={chartData} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
               <XAxis dataKey="ciclo" tick={{ fontSize: 11, fill: '#6B7280' }} axisLine={false} tickLine={false} />

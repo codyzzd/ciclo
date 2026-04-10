@@ -34,7 +34,7 @@ export function HomeClient() {
 
   if (!mounted) {
     return (
-      <div className="h-dvh flex flex-col bg-white w-full max-w-md mx-auto">
+      <div className="h-dvh flex flex-col bg-slate-50 w-full max-w-md mx-auto">
         {/* Header skeleton */}
         <div className="flex-shrink-0 px-4 py-3 flex items-center justify-between border-b border-gray-100">
           <div className="w-9 h-9 rounded-full bg-[#F3F4F6] animate-pulse" />
@@ -72,7 +72,7 @@ export function HomeClient() {
 
   if (profiles.length === 0) {
     return (
-      <div className="h-dvh bg-white flex flex-col items-center justify-center px-8 gap-6">
+      <div className="h-dvh bg-slate-50 flex flex-col items-center justify-center px-8 gap-6">
         <div className="text-6xl">🩷</div>
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Bem-vinda ao Meu Ciclo</h1>
@@ -101,7 +101,7 @@ export function HomeClient() {
   }
 
   return (
-    <div className="h-dvh flex flex-col bg-white w-full max-w-md mx-auto">
+    <div className="h-dvh flex flex-col bg-slate-50 w-full max-w-md mx-auto">
 
       {/* Header — nunca scrollar */}
       <div className="flex-shrink-0 z-20 anim-1">
