@@ -79,17 +79,19 @@ export function getCycleInsights(markedDates: string[]): CycleInsights {
 export function getPregnancyProbability(
   fertileDays: Set<string>,
   ovulationDays: Set<string>,
-  today: string
-): 'baixa' | 'média' | 'alta' {
-  if (ovulationDays.has(today) || fertileDays.has(today)) return 'alta'
+  today: string,
+  isOnPeriod: boolean
+): 'improvável' | 'baixa' | 'possível' | 'certo' | 'alta' {
+  if (isOnPeriod) return 'improvável'
+  if (ovulationDays.has(today)) return 'alta'
+  if (fertileDays.has(today)) return 'certo'
 
-  // check within 2 days of fertile window
   const todayDate = new Date(today)
-  for (let i = 1; i <= 2; i++) {
+  for (let i = 1; i <= 3; i++) {
     const d = new Date(todayDate)
     d.setDate(d.getDate() + i)
     const ds = d.toISOString().split('T')[0]
-    if (fertileDays.has(ds) || ovulationDays.has(ds)) return 'média'
+    if (ovulationDays.has(ds) || fertileDays.has(ds)) return 'possível'
   }
 
   return 'baixa'
