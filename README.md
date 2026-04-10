@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ciclo
 
-## Getting Started
+App mobile-first de rastreamento de ciclo menstrual. Zero-config — o app aprende automaticamente a partir dos dias marcados, sem necessidade de input manual do usuário.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Deteccao automatica de ciclos a partir dos dias marcados
+- Previsao do proximo periodo, ovulacao e janela fertil
+- Timeline visual de 15 dias centrada no dia atual
+- Countdown orb animado com dias ate o proximo periodo
+- Indicador de chance de gravidez baseado na fase do ciclo
+- Cards de periodo e ovulacao com datas previstas
+- Multiplos perfis por conta
+- PWA instalavel (splash screen, icone, offline-ready)
+
+## Stack
+
+| Camada | Tecnologia |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Linguagem | TypeScript |
+| Estilo | Tailwind CSS v4 |
+| Componentes | shadcn/ui |
+| Auth | Supabase (email/senha) |
+| Persistencia | localStorage |
+| Icones | Font Awesome 7 Free |
+| Storybook | @storybook/nextjs-vite |
+
+## Estrutura
+
+```
+app/
+  layout.tsx              Layout raiz, PWA meta tags
+  page.tsx                Redireciona para HomeClient
+  HomeClient.tsx          Shell principal com BottomNav e tabs
+  login/                  Tela de login/cadastro
+
+components/
+  BottomNav.tsx           Navegacao inferior (Home, Calendar, Insights)
+  CardInfo.tsx            Card de dado com label colorido (rose/teal)
+  CalendarMonth.tsx       Grid de um mes com estados visuais
+  CountdownOrb.tsx        Orb SVG animado com countdown
+  PregnancyChanceCard.tsx Card com barra de chance de gravidez
+  ProfileHeader.tsx       Cabecalho com avatar, nome e logout
+  TimelineStrip.tsx       Strip de 15 dias com fases do ciclo
+  views/
+    HomeTab.tsx
+    CalendarTab.tsx
+    InsightsTab.tsx
+
+lib/
+  cycle-logic.ts          detectPeriods, calculatePredictions
+  insights-logic.ts       getPregnancyProbability, getCycleInsights
+
+hooks/
+  useCycleData.ts         State management + localStorage
+
+design/                   Storybook — Design System (cores, tipografia, tokens)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Regras de negocio
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Deteccao de ciclos:** dias consecutivos marcados com gap maximo de 2 dias
+- **Previsoes:** requer minimo de 2 ciclos detectados; media dos ultimos 6
+- **Ovulacao:** proximo periodo − 14 dias
+- **Janela fertil:** ovulacao − 5 ate ovulacao + 1
+- **Clique simples:** toggle dia de periodo
+- **Clique longo (500ms):** seletor de intensidade (leve/medio/intenso)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Design System
 
-## Learn More
+O projeto usa um Design System no Figma com colecoes de variaveis:
 
-To learn more about Next.js, take a look at the following resources:
+- **Colors** — paleta completa Tailwind (rose, teal, slate, etc.)
+- **Spacing** — escala de espacamento
+- **Typography** — escala de 20 estilos (Display, H1–H6, Body LG–XS, Caption, Overline, Label, Micro)
+- **Border Radius** — tokens de raio
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Regra: tons neutros usam exclusivamente a familia `slate` (nunca `gray`, `zinc`, `neutral`).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Desenvolvimento
 
-## Deploy on Vercel
+```bash
+# Instalar dependencias
+npm install
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Servidor de desenvolvimento
+npm run dev
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Storybook
+npm run storybook
+
+# Build de producao
+npm run build
+```
+
+## Variaveis de ambiente
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://dvudhjkkmvjctlxpwqhn.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_anon_key
+```
+
+> Auth via Supabase email/senha. OAuth social nao utilizado intencionalmente.
+> Migracao para banco de dados (Supabase DB) sera feita em etapa futura — dados persistem em localStorage por ora.
