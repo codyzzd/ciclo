@@ -3,7 +3,7 @@ import { CalendarMonth } from './CalendarMonth'
 import type { CyclePrediction, CycleDay } from '@/types'
 
 const meta: Meta<typeof CalendarMonth> = {
-  title: 'Ciclo/CalendarMonth',
+  title: 'Ciclo/Organismos/CalendarMonth',
   component: CalendarMonth,
   parameters: {
     layout: 'padded',

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { CountdownOrb } from './CountdownOrb'
 
 const meta: Meta<typeof CountdownOrb> = {
-  title: 'Ciclo/CountdownOrb',
+  title: 'Ciclo/Átomos/CountdownOrb',
   component: CountdownOrb,
   parameters: {
     layout: 'centered',

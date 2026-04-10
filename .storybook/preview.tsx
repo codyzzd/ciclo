@@ -26,7 +26,7 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ['Design System', ['Overview', 'Colors', 'Typography', 'Tokens'], 'UI', 'Ciclo'],
+        order: ['Design System', ['Tipografia', 'Cores', 'Tokens'], 'UI', 'Ciclo', ['Átomos', 'Moléculas', 'Organismos']],
       },
     },
   },
