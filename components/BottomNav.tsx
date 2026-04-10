@@ -35,8 +35,8 @@ export function BottomNav({ active, onChange }: Props) {
                 isActive ? 'text-rose-600' : 'text-slate-400'
               }`}
             >
-              <FontAwesomeIcon icon={isActive ? tab.solid : tab.regular} className="w-[18px] h-[18px]" />
-              <span className="text-[12px] font-bold leading-4">{tab.label}</span>
+              <FontAwesomeIcon icon={isActive ? tab.solid : tab.regular} className="w-5 h-5" />
+              <span className="text-[14px] font-bold leading-5">{tab.label}</span>
             </button>
           )
         })}
