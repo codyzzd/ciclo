@@ -1,7 +1,7 @@
 'use client'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDroplet, faHeart, faSeedling, faCircle } from '@fortawesome/free-solid-svg-icons'
+import { faDroplet, faHeart, faSeedling } from '@fortawesome/free-solid-svg-icons'
 import { faCircle as faCircleOutline } from '@fortawesome/free-regular-svg-icons'
 import type { CyclePrediction, CycleDay } from '@/types'
 import type { CalendarMode } from './ModeToggle'
@@ -89,11 +89,34 @@ export function CalendarMonth({ year, month, mode, prediction, markedDates, getD
           // --- Cell background & text color ---
           let cellClass = ''
           let numberClass = ''
+          // heart icon color: white on dark backgrounds, pink on light backgrounds
+          let heartColor = 'text-white'
 
           if (mode === 'sex' && hasSexo) {
-            // No modo relação, dias com sexo são sempre roxos
-            cellClass = 'bg-[#7C3AED] ring-2 ring-[#7C3AED]/40'
-            numberClass = 'text-white font-bold'
+            if (isPeriod) {
+              const intensity = dayData?.intensidade
+              if (intensity === 'leve')        cellClass = 'bg-[#FF7699]'
+              else if (intensity === 'intenso') cellClass = 'bg-[#C2185B]'
+              else                              cellClass = 'bg-[#FF385C]'
+              numberClass = 'text-white font-bold'
+              heartColor = 'text-white'
+            } else if (isOvulation && isCurrentMonth) {
+              cellClass = 'bg-[#00A699] ring-2 ring-[#007A73]'
+              numberClass = 'text-white font-bold'
+              heartColor = 'text-white'
+            } else if (isFertile && isCurrentMonth) {
+              cellClass = 'bg-[#E6F7F6]'
+              numberClass = 'text-[#007A73] font-semibold'
+              heartColor = 'text-[#e91e8c]'
+            } else if (isPredicted && isCurrentMonth) {
+              cellClass = 'bg-[#FFF0F2]'
+              numberClass = 'text-[#FF385C] font-semibold'
+              heartColor = 'text-[#e91e8c]'
+            } else {
+              cellClass = 'bg-[#7C3AED] ring-2 ring-[#7C3AED]/40'
+              numberClass = 'text-white font-bold'
+              heartColor = 'text-white'
+            }
           } else if (isPeriod) {
             const intensity = dayData?.intensidade
             if (intensity === 'leve')        cellClass = 'bg-[#FF7699]'
@@ -144,7 +167,7 @@ export function CalendarMonth({ year, month, mode, prediction, markedDates, getD
                 onTouchEnd={(e) => { e.preventDefault(); onPressEnd() }}
                 onTouchCancel={onPressCancel}
                 className={`
-                  relative w-10 h-12 rounded-xl flex flex-col items-center justify-center
+                  relative w-10 h-12 rounded-[4px] flex flex-col items-center justify-center
                   transition-all duration-150 select-none
                   ${isFuture ? 'cursor-default' : 'active:scale-90'}
                   ${cellClass}
@@ -157,13 +180,22 @@ export function CalendarMonth({ year, month, mode, prediction, markedDates, getD
                   {date.getDate()}
                 </span>
 
-                {/* Primary icon row */}
+                {/* Icon row */}
                 <span className="mt-1 flex items-center gap-1">
                   {mode === 'sex' && hasSexo ? (
                     <>
-                      <FontAwesomeIcon icon={faHeart} className="w-2.5 h-2.5 text-white" />
+                      <FontAwesomeIcon icon={faHeart} className={`w-2.5 h-2.5 ${heartColor}`} />
                       {isPeriod && (
-                        <FontAwesomeIcon icon={faDroplet} className="w-2 h-2 text-white/60" />
+                        <FontAwesomeIcon icon={faDroplet} className="w-2 h-2 text-white/80" />
+                      )}
+                      {!isPeriod && isOvulation && isCurrentMonth && (
+                        <FontAwesomeIcon icon={faCircleOutline} className="w-2 h-2 text-white/80" />
+                      )}
+                      {!isPeriod && !isOvulation && isFertile && isCurrentMonth && (
+                        <FontAwesomeIcon icon={faSeedling} className="w-2 h-2 text-[#007A73]" />
+                      )}
+                      {!isPeriod && !isOvulation && !isFertile && isPredicted && isCurrentMonth && (
+                        <FontAwesomeIcon icon={faDroplet} className="w-2 h-2 text-[#FF385C]/80" />
                       )}
                     </>
                   ) : (
