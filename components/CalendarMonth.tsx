@@ -85,13 +85,13 @@ export function CalendarMonth({ year, month, mode, prediction, markedDates, getD
           const dayData = getDayData(dateStr)
           const hasSexo = dayData?.sexo ?? false
           const isOtherMonth = !isCurrentMonth
+          const sexMode = mode === 'sex'
 
           // --- Cell background & text color ---
           let cellClass = ''
           let numberClass = ''
 
-          if (hasSexo) {
-            // always purple when relação was marked, regardless of mode or cycle state
+          if (sexMode && hasSexo) {
             cellClass = 'bg-[#7C3AED]'
             numberClass = 'text-white font-bold'
           } else if (isPeriod) {
@@ -113,7 +113,6 @@ export function CalendarMonth({ year, month, mode, prediction, markedDates, getD
 
           const isFuture = dateStr > todayStr
 
-          // --- Long press (for intensity) ---
           let pressTimer: ReturnType<typeof setTimeout> | null = null
           let didLong = false
 
@@ -157,9 +156,8 @@ export function CalendarMonth({ year, month, mode, prediction, markedDates, getD
                   {date.getDate()}
                 </span>
 
-                {/* Icon row */}
                 <span className="mt-1 flex items-center gap-1">
-                  {hasSexo ? (
+                  {sexMode && hasSexo ? (
                     <>
                       <FontAwesomeIcon icon={faHeart} className="w-2.5 h-2.5 text-white" />
                       {isPeriod && (
